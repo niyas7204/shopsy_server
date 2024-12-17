@@ -3,7 +3,7 @@
 import mongoose from 'mongoose';
 
 const productSchema = new mongoose.Schema({
-    product_name: {
+    productName: {
         type: String,
         required: true,
 
@@ -16,6 +16,15 @@ const productSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    category: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref:"Category",
+        required: true,
+    },
+    unlist:{
+        type:Boolean,
+        default:false  
+      },
     images: [{
         type: String,
         required: true
@@ -24,16 +33,27 @@ const productSchema = new mongoose.Schema({
         type: Number,
         required: true
     },
-    seller_id:{
-        type: String,
+    totalRating:{
+        type:Number,
+        default:0,
+    },
+    noOfRating:{
+        type:Number,
+        default:0,
+        required:false
+    },
+    salesVolume: {
+        type: Number,
+        default:0,
+        required:false
+    },
+    createdAt: { type: Date, default: Date.now },
+    seller_id: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
         required: true
     }
-    // seller_id: {
-    //     type: mongoose.Schema.Types.ObjectId,
-    //     ref: 'User',
-    //     required: true
-    // }
 });
 
-const productModel = mongoose.model('Product',productSchema);
+const productModel = mongoose.model('Product',productSchema,'products');
 export default productModel;

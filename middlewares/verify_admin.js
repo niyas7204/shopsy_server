@@ -13,7 +13,7 @@ if(!verified){
 }
 console.log("id " +verified.id);
 const user =await userModel.findOne({_id:verified.id});
- console.log("--------"+user.userType+ "======" +user.name);
+ 
 if(user.userType == "admin"){
     req.user = verified.id;
     req.token = token;

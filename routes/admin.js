@@ -5,8 +5,7 @@ const adminRouter=express.Router();
 
 adminRouter.post('/addProduct',addProduct)
 adminRouter.get('/getProduct',getProduct);
-adminRouter.get('/getProduct',getProduct);
 adminRouter.post('/deleteProduct',deleteProduct);
 adminRouter.get('/getCategory',getCategory);
-adminRouter.get('/createCategory);
+adminRouter.post('/createCategory',createCategory);
 export default adminRouter;

@@ -6,19 +6,28 @@ import categoryModel from '../models/category_model.js';
 //To add new new Product
 export const addProduct = async (req,res)=>{
     try {
-        const {product_name,price,description,images,quantity,category}=req.body;
-       const seller_id=req.user; 
+        const {productName,price,description,images,quantity}=req.body;
+        const categoryName=req.headers["product_category"]
+       const sellerId=req.user; 
+
+       let selectedCategory=await categoryModel.findOne({name:categoryName});
+       if(!selectedCategory){
+        res.status(400).json({message:"Failure",error:"Category not found"});
+       }
+      console.log(selectedCategory);
+     let category = selectedCategory._id;
      let product = productModel({
-        product_name,
+        productName,
         price,
         description,
         images,
         quantity,
-        seller_id,
-        category
+        sellerId,
+        category,
      });
    product=await product.save();
-   res.status(200).json({message:"Success",product:product});
+ product=await  product.populate('category','name');
+   res.status(200).json( product);
     } catch (error) {
         
         res.status(500).json({message:"Failure",error:error.message});
@@ -29,7 +38,8 @@ export const addProduct = async (req,res)=>{
 //To fetch all Product
  export const getProduct= async (req,res)=>{
 try {
-    const product = await productModel.find({});
+    const product = await productModel.find({})
+    .populate('category','name') ;
     res.status(200).json({message:"Success",products:product});
 } catch (error) {
     res.status(500).json({message:"Failure",error:error.message});
@@ -44,13 +54,14 @@ try {
     try {
         const {id} = req.body;
         console.log('user id'+ id);
-        const product=await productModel.findByIdAndDelete(id);
+        let product=await productModel.findByIdAndDelete(id);
 
         if(!product)
 {
     res.status(400).json({message:"Failure",error:"product not found"});
 }         
-        res.status(200).json({message:"Success",product:product});
+product = await product. populate('category','name');
+        res.status(200).json(  product);
     } catch (error) {
         res.status(500).json({message:"Failure",error:error.message});
     }
@@ -61,11 +72,11 @@ try {
     export const createCategory=async(req,res)=>{
      const   {name}=req.body;
      try {
-const isExist = await categoryModel.findOne(name);
+const isExist = await categoryModel.findOne({name:name});
 if(!isExist){
     let category=categoryModel({name});
     category=await category.save();
-    res.status(200).json({message:"Success",});
+    res.status(200).json({message:"Success",category:category});
 }else{
     res.status(400).json({message:"Failure",error:"category already exist"});
 }
@@ -78,7 +89,7 @@ if(!isExist){
     export const getCategory = async (req,res)=>{
         try {
             const category = await categoryModel.find({});
-            res.status(200).json({message:"Success",category:category});
+            res.status(200).json({message:"Success",categories:category});
             
         } catch (error) {
             res.status(500).json({message:"Failure",error:error.message}); 

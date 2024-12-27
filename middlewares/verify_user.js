@@ -1,10 +1,10 @@
 import jwt from "jsonwebtoken";
 
-const auth = async (req,res,next)=>{
+const verifyUser = async (req,res,next)=>{
     try {
         const token = req.header("Access-Token");
         if(!token){
-            res.status(401).json({message:"Failure", error:"Access Denied"});
+            res.status(401).json({message:"Failure", error:"Access Denied"});  
         }
 const verified = jwt.verify(token,"auth-key")
 if(!verified){
@@ -14,6 +14,8 @@ req.user = verified.id;
 req.token = token;
 next();
     } catch (error) {
-        res.status(500).json({message:"Failure", error:e.message})
+        res.status(500).json({message:"Failure", error:error.message})
     }
 }
+
+export default verifyUser;

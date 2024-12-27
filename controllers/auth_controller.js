@@ -7,6 +7,7 @@ import userModel from "../models/user_model.js";
 
 export const userSignin= async   (req,res)=>{
     try {
+      console.log("signin======");
        const{email,password}=req.body;
        const user=await userModel.findOne({email});
        if(!user){
@@ -50,9 +51,9 @@ export const userSignup= async (req,res)=>{
     });
     user=await user.save();
     const accessToken=jwt.sign({id:user._id},"auth-key");
-       const userObj=user.toObject();
-       delete userObj.password;
-    return res.status(200).json({"message":"success","Access-Token": accessToken,user:userObj});
+      //  const userObj=user.toObject();
+      //  delete userObj.password;
+    return res.status(200).json({"message":"success","Access-Token": accessToken,});
     }catch (e){
       if(e.errors.email){
        return res.status(400).json({message:"Failure", error:e.errors.email.message});

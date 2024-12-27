@@ -33,22 +33,14 @@ const productSchema = new mongoose.Schema({
         type: Number,
         required: true
     },
-    totalRating:{
-        type:Number,
-        default:0,
-    },
-    noOfRating:{
-        type:Number,
-        default:0,
-        required:false
-    },
+  
     salesVolume: {
         type: Number,
         default:0,
         required:false
     },
     createdAt: { type: Date, default: Date.now },
-    seller_id: {
+    sellerId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
         required: true

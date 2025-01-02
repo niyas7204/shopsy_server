@@ -15,11 +15,15 @@ try {
 export const getProducts = async(req,res)=>{
     try{
         let categoryId=req.query.category??"";
-        const name = req.query.name ?? "";
+        if(req.query.name==null){
+            console.log(" name is null");  
+        }
+        let name = req.query.name ?? "";
+
 let products;
         if(categoryId){
             categoryId = new mongoose.Types.ObjectId(categoryId);
-            console.log("with category " + categoryId);
+            console.log("with name " +  name);
 
            products = await productModel.find({ category: categoryId,productName : new RegExp(name,'i')})
            .populate('category','name').lean() ;

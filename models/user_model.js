@@ -36,7 +36,21 @@ return value.match(emailRegex);
     userType:{
 type:String,
 default:"user",
-    }
+    },
+    cart:[
+        {
+            product: {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: "Product",  
+                required: true,
+            },
+            quantity: {
+                type: Number,
+                required: true,
+                min: 1,  
+            },
+        },
+    ]
 })
  
 const userModel=mongoose.model("User",userSchema,);

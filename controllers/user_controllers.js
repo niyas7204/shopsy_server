@@ -1,6 +1,7 @@
 
 import categoryModel from '../models/category_model.js';
 import productModel from '../models/product_model.js';
+import userModel from '../models/user_model.js';
 import mongoose from 'mongoose';
 
 export const getDashboard = async (req,res)=>{
@@ -40,3 +41,29 @@ let products;
     res.status(500).json({message:"Failure",error:error.message});
 }
 }
+export const addToCart= async (req,res)=>{
+    try {
+        console.log("add to category" )
+      const  {productId,quantity} = req.body;
+        const user = await userModel.findById(req.user);
+        if(!user){
+              res.status(404).json({message:"User not found"});
+        }
+        
+        if (!mongoose.Types.ObjectId.isValid(productId) || quantity < 1) {
+              res.status(400).json({ message: "Invalid product or quantity" });
+        }
+        const cartItemIndex =   user.cart.findIndex((item=> item.product.toString()===productId))
+        if(cartItemIndex>-1){
+            user.cart[cartItemIndex].quantity += quantity;
+            res.status(200,).json({message:"cart updated",product:user.cart});
+        }else{
+
+            user.cart.push({ product: productId, quantity });
+            res.status(200,).json({message:"cart updated",product:user.cart});
+        }
+        
+    } catch (error) {
+        res.status(500).json({message:"Failure",error:error.message}); 
+    }
+    }

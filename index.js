@@ -1,5 +1,6 @@
 // import express from 'express';
 import express from "express";
+import dotenv from 'dotenv';
 import mongoose  from "mongoose";
 import adminRouter from "./routes/admin.js";
 import verifyAdmin from "./middlewares/verify_admin.js";
@@ -8,12 +9,12 @@ import authRouter from '/home/user/shopsy/routes/auth.js';
 import userRouter from '/home/user/shopsy/routes/user.js';
 
 //init
-const port = 4000;
+dotenv.config();
 const app=express();
 import cors from 'cors';
 app.use(cors());
 
-const db="mongodb+srv://9747niyas:Niyas_9747@cluster0.ofhal.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
+
 //auth middleware
 app.use(express.json());
 app.use("/api/auth/",authRouter);
@@ -25,12 +26,13 @@ app.get("/api/get",(req,res)=>{
 });
  
 //mongoose connection
+const db=process.env.DB_URI
 mongoose.connect(db).then(()=>{
   console.log("connected to mongodb");
 }).catch((e)=>{
   console.log( `connection error ${e}`);
 });
-
+const port = process.env.PORT || 4000
 app.listen(port ,() => {
   console.log(`listening on port ${port}   `);
 });

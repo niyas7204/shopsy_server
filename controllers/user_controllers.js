@@ -41,32 +41,3 @@ let products;
     res.status(500).json({message:"Failure",error:error.message});
 }
 }
-export const addToCart= async (req,res)=>{
-    try {
-        console.log("add to category" )
-      const  {productId,quantity} = req.body;
-        const user = await userModel.findById(req.user);
-        if(!user){
-              res.status(404).json({message:"User not found"});
-        }
-        
-        if (!mongoose.Types.ObjectId.isValid(productId) || quantity < 1) {
-              res.status(400).json({ message: "Invalid product or quantity" });
-        }
-        const cartItemIndex =   user.cart.findIndex((item=> item.product.toString() === productId))
-        console.log("index "+ cartItemIndex);
-        if(cartItemIndex>-1){
-            user.cart[cartItemIndex].quantity += quantity;
-            await user.save();
-            console.log("quantity "+ user.cart[cartItemIndex].quantity);
-            res.status(200,).json({message:"cart updated",product:user.cart});
-        }else{
-
-            user.cart.push({ product: productId, quantity });    await user.save();
-            res.status(200,).json({message:"cart updated",product:user.cart});
-        }
-        
-    } catch (error) {
-        res.status(500).json({message:"Failure",error:error.message}); 
-    }
-    }
